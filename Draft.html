@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Southern White Rhinos</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <style>
+      .map-overlay {
+        font: 12px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
+        position: absolute;
+        width: 25%;
+        top: 0;
+        left: 0;
+        padding: 10px;
+      }
+
+      .map-overlay .map-overlay-inner {
+        background-color: #fff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+
+      .map-overlay h2 {
+        line-height: 24px;
+        display: block;
+        margin: 0 0 10px;
+      }
+
+      .map-overlay .legend .bar {
+        height: 10px;
+        width: 100%;
+        background: linear-gradient(to right, #fca107, #7f3121);
+      }
+
+      .map-overlay input {
+        background-color: transparent;
+        display: inline-block;
+        width: 100%;
+        position: relative;
+        margin: 0;
+        cursor: ew-resize;
+      }
+    </style>
+
+    <div id="map"></div>
+
+    <div class="map-overlay top">
+      <div class="map-overlay-inner">
+        <h1>
+          The Rise and Fall of the Southern White Rhino Population Over Time
+        </h1>
+        <p>
+          Data:
+          <a
+            href="https://ourworldindata.org/grapher/southern-white-rhinos?tab=map&fbclid=IwAR3P4vUHqefQmDI0uyHKCECrRDAgRuOQHRRGsP6OD6U3BZwunGgvbEo1g48"
+            >Southern White Rhino Population</a
+          >
+          in Africa, 1895-2017
+        </p>
+        <h2>Year<label id="pop_year"></label></h2>
+        <input
+          id="slider"
+          type="range"
+          min="1895"
+          max="2017"
+          step="5"
+          value="1895"
+        />
+      </div>
+      <div class="map-overlay-inner">
+        <div id="legend" class="legend">
+          <div class="bar"></div>
+          <div>Population</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1Ijoidmlja3lqMjAiLCJhIjoiY2s2cmU2a2Z6MDU3OTNkbGExcTBhanlsNCJ9.AnDT5Fbe1lZxtUukEMhabA';
+
+      var map = new mapboxgl.Map({
+        container: 'map', // container element id
+        style: 'mapbox://styles/vickyj20/ck8f7jpsm0uo41is3701cjy1m',
+        center: [34.0085, 8.7832], // initial map center in [lon, lat]
+        zoom: 2
+      });
+
+      map.on('load', function() {
+              map.addSource('1895', {
+                  type: 'vector',
+                  url: 'vickyj20.dhu91dsg'
+              });
+
+      	map.addSource('1929', {
+                  type: 'vector',
+                  url: 'vickyj20.3felnp0a'
+              });
+
+              map.addSource('1948', {
+                  type: 'vector',
+                  url: 'vickyj20.1ocx6n7c'
+              });
+
+
+      	map.addSource('1968', {
+                  type: 'vector',
+                  url: 'vickyj20.35zzxrkc'
+              });
+
+
+      	map.addSource('1984', {
+                  type: 'vector',
+                  url: 'vickyj20.5enjacw0'
+              });
+
+
+      	map.addSource('1987', {
+                  type: 'vector',
+                  url: 'vickyj20.2h0d8ns5'
+              });
+
+      	map.addSource('1991', {
+                  type: 'vector',
+                  url: 'vickyj20.9paigm0t'
+              });
+
+      	map.addSource('1992', {
+                  type: 'vector',
+                  url: 'vickyj20.0a0205bp'
+              });
+
+      	map.addSource('1993', {
+                  type: 'vector',
+                  url: 'vickyj20.aeg0c8u1'
+              });
+
+      	map.addSource('1995', {
+                  type: 'vector',
+                  url: 'vickyj20.8kjhrmeq'
+              });
+
+
+      	map.addSource('1997', {
+                  type: 'vector',
+                  url: 'vickyj20.741whe7f'
+              });
+
+      	map.addSource('2005', {
+                  type: 'vector',
+                  url: 'vickyj20.8uad4cts'
+              });
+
+
+      	map.addSource('2010', {
+                  type: 'vector',
+                  url: 'vickyj20.bcog9pnd'
+              });
+
+
+      	map.addSource('2017', {
+      		type: 'vector',
+      		url: 'vickyj20.cbkirtrm'
+      	});
+
+
+      document.getElementById('slider').addEventListener('input', function(e) {
+        var pop_year = (e.target.value);
+
+        var yearID = ['1895','1929','1948','1968','1984','1987','1991','1992','1993','1995','1997','2005','2010','2017'];
+        // if those layers exist, add a toggle button
+        for (var i = 0; i < yearID.length; i++) {
+            var id = yearID[i];
+                if (pop_year === yearID[i]) {
+                    map.setLayoutProperty(yearID[i], 'visibility', 'visible');
+                } else {
+                    map.setLayoutProperty(yearID[i], 'visibility', 'none');
+                }
+        }
+      });
+      })
+    </script>
+  </body>
+</html>
